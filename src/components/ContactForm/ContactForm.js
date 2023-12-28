@@ -9,8 +9,13 @@ import {
 } from './ContactForm.styled';
 
 import * as Yup from 'yup';
-import { addContact, getContactsValue } from 'components/Redux/contactsSlice';
+//import { addContact } from 'components/Redux/contactsSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectContactsValue,
+  selectIsLoading,
+} from 'components/Redux/selectors';
+import { addContacts } from 'components/Redux/operations';
 
 const PhoneBookSchema = Yup.object().shape({
   name: Yup.string().min(3, 'Too Short!').required('Required'),
@@ -24,7 +29,8 @@ const PhoneBookSchema = Yup.object().shape({
 
 export const ContactForm = () => {
   const dispatch = useDispatch();
-  const contacts = useSelector(getContactsValue);
+  const contacts = useSelector(selectContactsValue);
+  const isLoading = useSelector(selectIsLoading);
 
   const handleCheckContact = values => {
     const checkContact = contacts.some(
@@ -34,7 +40,7 @@ export const ContactForm = () => {
       alert(`${values.name} is already in contacts`);
       return;
     }
-    dispatch(addContact(values));
+    dispatch(addContacts(values));
   };
 
   return (
@@ -60,7 +66,9 @@ export const ContactForm = () => {
           <ErrorMessage name="number" component="span" />
         </FormGroup>
 
-        <FormBtn type="submit">Add contact</FormBtn>
+        <FormBtn type="submit" disabled={isLoading}>
+          Add contact
+        </FormBtn>
       </Form>
     </Formik>
   );

@@ -1,21 +1,31 @@
 import { Contacts } from './Contacts';
 import { ContactBox } from './ContactList.styled';
-import { useSelector } from 'react-redux';
-import { getContactsValue } from 'components/Redux/contactsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  selectContactsValue,
+  selectFilters,
+  selectVisibleContacts,
+} from 'components/Redux/selectors';
+import { useEffect } from 'react';
+import { fetchContacts } from 'components/Redux/operations';
 
 export const ContactList = () => {
-  const contacts = useSelector(getContactsValue);
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContactsValue);
+  const visible = useSelector(selectVisibleContacts);
 
-  const filter = useSelector(state => state.filters);
+  const filter = useSelector(selectFilters);
+
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
 
   const getVisibleContacts = () => {
     if (filter === '') {
       return contacts;
     }
 
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filter.toLowerCase().trim())
-    );
+    return visible;
   };
 
   const visibleContacts = getVisibleContacts();
