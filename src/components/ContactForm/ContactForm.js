@@ -9,12 +9,9 @@ import {
 } from './ContactForm.styled';
 
 import * as Yup from 'yup';
-//import { addContact } from 'components/Redux/contactsSlice';
+
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  selectContactsValue,
-  selectIsLoading,
-} from 'components/Redux/selectors';
+import { selectContactsValue } from 'components/Redux/selectors';
 import { addContacts } from 'components/Redux/operations';
 
 const PhoneBookSchema = Yup.object().shape({
@@ -30,7 +27,6 @@ const PhoneBookSchema = Yup.object().shape({
 export const ContactForm = () => {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContactsValue);
-  const isLoading = useSelector(selectIsLoading);
 
   const handleCheckContact = values => {
     const checkContact = contacts.some(
@@ -66,9 +62,7 @@ export const ContactForm = () => {
           <ErrorMessage name="number" component="span" />
         </FormGroup>
 
-        <FormBtn type="submit" disabled={isLoading}>
-          Add contact
-        </FormBtn>
+        <FormBtn type="submit">Add contact</FormBtn>
       </Form>
     </Formik>
   );
